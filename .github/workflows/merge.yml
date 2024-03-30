@@ -1,0 +1,43 @@
+name: Pull Request Automation
+
+on:
+  push:
+    branches:
+      - dev
+      - test
+
+jobs:
+  automate_pull_request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Determine target branch and PR details
+        id: determine_branch_and_details
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            target_branch="test"
+            title="Merge dev into test"
+            body="Automated pull request to merge dev into test"
+          elif [[ "${{ github.ref }}" == "refs/heads/test" ]]; then
+            target_branch="main"
+            title="Merge test into main"
+            body="Automated pull request to merge test into main"
+          else
+            echo "Unsupported branch"
+            exit 1
+          fi
+          echo "::set-output name=target_branch::$target_branch"
+          echo "::set-output name=title::$title"
+          echo "::set-output name=body::$body"
+        shell: bash
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.determine_branch_and_details.outputs.target_branch }}
+          title: ${{ steps.determine_branch_and_details.outputs.title }}
+          body: ${{ steps.determine_branch_and_details.outputs.body }}
