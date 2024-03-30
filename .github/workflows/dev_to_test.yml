@@ -1,0 +1,31 @@
+name: merge dev to test
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install Dependencies
+      run: |
+        pip install pandas sklearn
+    - name: Run Unit Tests
+      run: |
+        python -m unittest test.py
+    - name: Merge to Test Branch
+      if: github.ref == 'refs/heads/dev' && success()
+      uses: repo-sync/pull-request@v2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        pr_title: "Automated merge dev into test"
+        pr_body: "Running unit tests passed, merging branch."
+        destination_branch: "test"
+        source_branch: "dev"
