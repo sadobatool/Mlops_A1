@@ -22,4 +22,4 @@ jobs:
           title: "Automated Pull Request from Dev to Test"
           body: "This pull request was automatically created when code was pushed to the dev branch."
           labels: "automated"
-          reviewers: "admin-username"
+          reviewers: "saimsaleem"
