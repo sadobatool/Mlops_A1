@@ -12,7 +12,7 @@ data = pd.read_csv('heart.csv')  # Make sure the file name matches
 X = data.drop('target', axis=1)  # Features
 y = data['target']  # Target variable
 
-# Split the dataset into training and testing sets
+# dataset split into training and testing sets 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Scale the features
