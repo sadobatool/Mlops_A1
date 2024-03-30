@@ -1,0 +1,23 @@
+name: Automated Testing
+
+on:
+  pull_request:
+    branches: [ test ]
+  push:
+    branches: [ test ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: python -m unittesting test.py
