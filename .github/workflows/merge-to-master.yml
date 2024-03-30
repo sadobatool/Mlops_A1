@@ -1,0 +1,20 @@
+name: Merge to Master on Successful Testing
+
+on:
+  pull_request:
+    branches:
+      - test
+
+jobs:
+  merge-to-master:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Merge into Master
+        run: |
+          git checkout master
+          git merge --no-ff ${{ github.event.pull_request.head.ref }}
+          git push origin master
