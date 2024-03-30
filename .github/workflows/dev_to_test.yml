@@ -19,10 +19,29 @@ jobs:
         pip install -r requirements.txt
     - name: Run Unit Tests
       run: |
-        python -m unittest test.py
-    - name: Merge to Test Branch
-      if: github.ref == 'refs/heads/dev' && success()
-      uses: repo-sync/pull-request@v1
+        python -m unittest test - name: Set up Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Merge to Test Branch
+        if: github.ref == 'refs/heads/dev' && success()
+        uses: repo-sync/pull-request@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          destinationBranch: 'test'.py
+          
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Merge to Test Branch
+        if: github.ref == 'refs/heads/dev' && success()
+        uses: repo-sync/pull-request@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          destinationBranch: 'test'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         pr_title: "Automated merge dev into test"
